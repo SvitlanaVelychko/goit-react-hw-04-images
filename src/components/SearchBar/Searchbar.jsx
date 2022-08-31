@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useState } from "react";
 import PropTypes from 'prop-types';
 import { SearchIcon } from '@primer/octicons-react';
 import { toast } from 'react-toastify';
@@ -9,38 +9,29 @@ import {
     SearchFormInput
 } from "./Searchbar.styled";
 
-export default class Searchbar extends Component {
-    state = {
-        query: '',
+const Searchbar = ({ onSubmit }) => {
+    const [query, setQuery] = useState('');
+
+    const handleChange = e => {
+        setQuery(e.currentTarget.value.trim().toLowerCase());
     };
 
-    handleChange = e => {
-        const query = e.currentTarget.value.trim().toLowerCase();
-        this.setState({ query });
-    };
-
-    handleSubmit = e => {
+    const handleSubmit = e => {
         e.preventDefault();
-
-        const { query } = this.state;
-        const { onSubmit } = this.props;
 
         if (query.trim() === '') {
             toast.error('Please, write word in search line.');
         } else {
             onSubmit(query);
-            this.setState({
-                query: '',
-            });
+            setQuery('');
         }
-
+        
         e.currentTarget.reset();
     };
 
-    render() {
         return (
             <SearchbarContainer>
-                <SearchForm onSubmit={this.handleSubmit}>
+                <SearchForm onSubmit={handleSubmit}>
                     <SearchFormButton type="submit">
                         <SearchIcon size={24} />
                     </SearchFormButton>
@@ -50,14 +41,15 @@ export default class Searchbar extends Component {
                         autoComplete="off"
                         autoFocus
                         placeholder="Search images and photos"
-                        onChange={this.handleChange}
+                        onChange={handleChange}
                     />
                 </SearchForm>
             </SearchbarContainer>
         );
-    }
 };
 
 Searchbar.propTypes = {
     onSubmit: PropTypes.func.isRequired,
 };
+
+export default Searchbar;

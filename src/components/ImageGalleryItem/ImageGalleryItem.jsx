@@ -1,29 +1,26 @@
-import { Component } from "react";
+import { useState } from "react";
 import PropTypes from 'prop-types';
 import Modal from "../Modal";
 import { ImageItem, ImageItemCard } from "./ImageGalleryItem.styled";
 
-export default class ImageGalleryItem extends Component {
-    state = {
-        isModalOpen: false,
-    };
+const ImageGalleryItem = ({ hit }) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    openModal = () => this.setState({ isModalOpen: true });
-    closeModal = () => this.setState({ isModalOpen: false });
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
 
-    render() {
-        const { hit } = this.props;
-        return (
-            <ImageItem>
-                <ImageItemCard src={hit.webformatURL} alt={hit.tags} onClick={this.openModal} />
-                {this.state.isModalOpen &&
-                    (<Modal onClose={this.closeModal}><img src={hit.largeImageURL} alt={hit.tags} /></Modal>)}
-            </ImageItem>
-        );
-    }
+    return (
+        <ImageItem>
+            <ImageItemCard src={hit.webformatURL} alt={hit.tags} onClick={openModal} />
+            {isModalOpen &&
+                (<Modal onClose={closeModal}><img src={hit.largeImageURL} alt={hit.tags} /></Modal>)}
+        </ImageItem>
+    );
 };
 
 ImageGalleryItem.propTypes = {
     hits: PropTypes.array,
-    isModal: PropTypes.bool,
+    isModalOpen: PropTypes.bool,
 };
+
+export default ImageGalleryItem;
